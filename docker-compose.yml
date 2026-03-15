@@ -1,0 +1,61 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: nobel
+      POSTGRES_PASSWORD: nobel
+      POSTGRES_DB: nobel
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nobel"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://nobel:nobel@db:5432/nobel
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-key-please-change-in-production-32ch}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+
+  seed:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql://nobel:nobel@db:5432/nobel
+    depends_on:
+      backend:
+        condition: service_started
+      db:
+        condition: service_healthy
+    command: python seed_demo.py
+    profiles:
+      - seed
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
