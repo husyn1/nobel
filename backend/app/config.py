@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     # Database — SQLite for local dev, PostgreSQL for production (set via env var)
-    DATABASE_URL: str = "sqlite:///./nobel.db"
+    DATABASE_URL: str = "sqlite:////tmp/nobel.db"  # /tmp is writable on Railway
 
     # Auth — MUST be overridden in production via environment variable
     SECRET_KEY: str = secrets.token_hex(32)

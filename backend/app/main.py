@@ -7,7 +7,11 @@ from app.config import settings
 from app.database import Base, engine
 from app.routers import analytics, auth, chat, courses
 
-Base.metadata.create_all(bind=engine)
+try:
+    Base.metadata.create_all(bind=engine)
+except Exception as e:
+    import logging
+    logging.getLogger(__name__).warning(f"DB init warning: {e}")
 
 app = FastAPI(
     title="Nobel API",
