@@ -1,0 +1,7 @@
+# Netlify: Next.js app lives in /frontend (monorepo).
+# Connect this GitHub repo in the Netlify UI — these settings apply automatically.
+# Docs: https://docs.netlify.com/frameworks/next-js/overview/
+
+[build]
+  base = "frontend"
+  command = "npm run build"
