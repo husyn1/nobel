@@ -1,7 +1,11 @@
-# Netlify: Next.js app lives in /frontend (monorepo).
-# Connect this GitHub repo in the Netlify UI — these settings apply automatically.
+# Netlify: Next.js app in /frontend (monorepo).
 # Docs: https://docs.netlify.com/frameworks/next-js/overview/
 
 [build]
   base = "frontend"
   command = "npm run build"
+
+# Ensures the Next.js runtime (SSR / App Router) is used; avoids sitewide 404 when
+# the site is mistaken for a static folder. Build & publish directory: leave empty in UI.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
