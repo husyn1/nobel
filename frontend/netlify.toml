@@ -1,8 +1,0 @@
-# Used when Netlify "Base directory" is set to `frontend` (monorepo).
-# https://docs.netlify.com/build/configure-builds/monorepos/
-
-[build]
-  command = "npm run build"
-
-[build.environment]
-  NODE_VERSION = "20"
