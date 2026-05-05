@@ -1,8 +1,0 @@
-# Netlify: Next.js app in /frontend (monorepo).
-# Use Netlify's built-in Next.js runtime (do not add @netlify/plugin-nextjs — it conflicts).
-# Build: leave "Publish directory" empty in the Netlify UI.
-# Docs: https://docs.netlify.com/frameworks/next-js/overview/
-
-[build]
-  base = "frontend"
-  command = "npm run build"
