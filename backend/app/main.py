@@ -44,6 +44,15 @@ app.include_router(chat.router)
 app.include_router(analytics.router)
 
 
+@app.get("/", include_in_schema=False)
+def root():
+    """Base URL — avoids a bare 404 when someone opens the API host in a browser."""
+    out = {"service": "nobel-api", "health": "/health"}
+    if settings.ENVIRONMENT != "production":
+        out["docs"] = "/docs"
+    return out
+
+
 @app.get("/health", include_in_schema=False)
 def health():
     return {"status": "ok", "service": "nobel-api"}
