@@ -36,7 +36,7 @@ Set these **environment variables** on the backend service:
 |---|---|
 | `SECRET_KEY` | Run `python3 -c "import secrets; print(secrets.token_hex(32))"` and paste result |
 | `ENVIRONMENT` | `production` |
-| `ALLOWED_ORIGINS` | `https://YOUR-FRONTEND.up.railway.app` (fill in after step below) |
+| `ALLOWED_ORIGINS` | `https://YOUR-FRONTEND.up.railway.app` (exact origin, comma-separated; **not** `*` — production refuses `*`) |
 | `OPENAI_API_KEY` | `test` |
 | `LLM_BASE_URL` | `https://vjioo4r1vyvcozuj.us-east-2.aws.endpoints.huggingface.cloud/v1` |
 | `LLM_MODEL` | `openai/gpt-oss-120b` |

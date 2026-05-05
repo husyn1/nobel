@@ -101,7 +101,7 @@ async def generate_response(messages: list[dict]) -> str:
             return content.strip()
         raise ValueError("Empty response from model")
     except Exception as e:
-        logger.warning(f"LLM tutor call failed ({type(e).__name__}): {e}")
+        logger.warning("LLM tutor call failed: %s", type(e).__name__)
         return _fallback_tutor_response(messages)
 
 
@@ -148,7 +148,7 @@ async def analyze_message(message_content: str, subject: str = "general") -> Ana
             homework_help_likelihood=_clamp(data.get("homework_help_likelihood")),
         )
     except Exception as e:
-        logger.warning(f"LLM analysis call failed ({type(e).__name__}): {e}")
+        logger.warning("LLM analysis call failed: %s", type(e).__name__)
         return _fallback_analysis(message_content)
 
 
