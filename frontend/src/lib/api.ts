@@ -1,9 +1,23 @@
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+/**
+ * Never fall back to localhost in production — that bakes a broken API URL into the client bundle.
+ */
+function resolveApiBaseUrl(): string {
+  const raw = process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/$/, "");
+  if (raw) return raw;
+  if (process.env.NODE_ENV === "production") {
+    // Deliberately invalid host so failures are obvious in Network tab (not silent same-origin 404).
+    return "https://__MISSING_NEXT_PUBLIC_API_URL__.invalid";
+  }
+  return "http://localhost:8000";
+}
+
+const API_URL = resolveApiBaseUrl();
 
 export const api = axios.create({
   baseURL: API_URL,
+  timeout: 15000,
   headers: { "Content-Type": "application/json" },
 });
 
@@ -16,6 +30,21 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (r) => r,
   (err) => {
+    if (err.code === "ECONNABORTED") {
+      err.response = {
+        data: {
+          detail:
+            "Request timed out. Backend may be waking up (free Render) or unavailable. Try again in a few seconds.",
+        },
+      };
+    } else if (!err.response) {
+      err.response = {
+        data: {
+          detail:
+            "Cannot reach backend API. Check NEXT_PUBLIC_API_URL and backend status.",
+        },
+      };
+    }
     if (err.response?.status === 401) {
       localStorage.removeItem("ic_token");
       localStorage.removeItem("ic_user");

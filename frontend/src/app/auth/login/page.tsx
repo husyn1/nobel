@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Zap } from "lucide-react";
 import toast from "react-hot-toast";
 import { login } from "@/lib/api";
+import { formatApiError } from "@/lib/api-error";
 import { setStoredAuth } from "@/lib/auth";
 
 function LoginForm() {
@@ -33,8 +34,8 @@ function LoginForm() {
       setStoredAuth(access_token, user, role);
       toast.success(`Welcome back, ${user.full_name}!`);
       router.push(role === "teacher" ? "/teacher/dashboard" : "/student/dashboard");
-    } catch (err: any) {
-      toast.error(err.response?.data?.detail || "Login failed. Check your credentials.");
+    } catch (err: unknown) {
+      toast.error(formatApiError(err, "Login failed. Check your credentials."));
     } finally {
       setLoading(false);
     }

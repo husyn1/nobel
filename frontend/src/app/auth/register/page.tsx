@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Zap } from "lucide-react";
 import toast from "react-hot-toast";
 import { registerTeacher, registerStudent } from "@/lib/api";
+import { formatApiError } from "@/lib/api-error";
 import { setStoredAuth } from "@/lib/auth";
 
 export default function RegisterPage() {
@@ -32,8 +33,8 @@ export default function RegisterPage() {
       setStoredAuth(access_token, user, role);
       toast.success(`Account created! Welcome, ${user.full_name}.`);
       router.push(role === "teacher" ? "/teacher/dashboard" : "/student/dashboard");
-    } catch (err: any) {
-      toast.error(err.response?.data?.detail || "Registration failed. Try again.");
+    } catch (err: unknown) {
+      toast.error(formatApiError(err, "Registration failed. Try again."));
     } finally {
       setLoading(false);
     }
