@@ -1,0 +1,10 @@
+# Keep in /frontend next to package.json + next.config.js.
+# Netlify UI: Base directory = "frontend", Publish directory = (empty).
+# Do not duplicate [build].base here — avoids monorepo path bugs.
+# https://docs.netlify.com/build/configure-builds/monorepos/
+
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
